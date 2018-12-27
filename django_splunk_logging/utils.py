@@ -25,7 +25,7 @@ def _get_request():
     request = None
     try:
         for i in range(8, 0, -1):
-            if 'request' in sys._getframe(i).f_locals.keys():
+            if 'request' in list(sys._getframe(i).f_locals.keys()):
                 request = sys._getframe(i).f_locals['request']
                 break
     except:

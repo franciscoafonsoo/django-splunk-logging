@@ -59,11 +59,11 @@ class SplunkEvent(object):
             return True
 
         if 'to_json' in dir(obj):
-            for k, v in obj.to_json().iteritems():
+            for k, v in obj.to_json().items():
                 setattr(self, k, v)
 
         elif isinstance(obj, dict):
-            for key, value in obj.iteritems():
+            for key, value in obj.items():
                 if type(value) is datetime.datetime:
                     setattr(self, key, value.strftime('%m/%d/%Y %H:%M:%S'))
                 elif type(value) is UUID:
@@ -102,8 +102,8 @@ class SplunkEvent(object):
             #     'error sending splunk event to http collector: {0}'.format(
             #         r.json()))
             # attempt to avoid recursion with the logging handler
-            print 'error sending splunk event to http collector: {0}'.format(
-                r.text)
+            print('error sending splunk event to http collector: {0}'.format(
+                r.text))
 
     def format_request(self):
         """ Format the request to JSON. """
@@ -123,8 +123,8 @@ class SplunkEvent(object):
                     # 'CLIENT': 'OTHER',
                 },
             }
-            
-            for k,v in self._request.META.iteritems():
+
+            for k,v in self._request.META.items():
                 if type(v) == int or type(v) == str:
                     data['META'][k] = v
 
