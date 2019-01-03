@@ -1,13 +1,14 @@
 import datetime
-import time
-import logging
 import json
-from uuid import UUID
+import logging
 import os
-
-from django.conf import settings
-import requests
+import time
 from threading import Thread
+from uuid import UUID
+
+import requests
+from django.conf import settings
+
 from .utils import _get_request
 
 
@@ -83,27 +84,14 @@ class SplunkEvent(object):
         return True
 
     def send_to_splunk(self):
-        url = settings.SPLUNK_ADDRESS + ":" + \
-            settings.SPLUNK_EVENT_COLLECTOR_PORT + \
-            '/services/collector/event'
+        url = f'{settings.SPLUNK_URL}:{settings.SPLUNK_EC_PORT}/services/collector/event'
+        headers = {'Authorization': f'Splunk {settings.SPLUNK_TOKEN}'}
+        data = json.dumps(self.format())
 
-        if settings.SPLUNK_HTTPS:
-            url = "https://" + url
-        else:
-            url = "http://" + url
+        r = requests.post(url, headers=headers, data=data, verify=False)
 
-        headers = {'Authorization': self._auth_key}
-        r = requests.post(url,
-                          headers=headers,
-                          data=json.dumps(self.format()),
-                          verify=False)
-        if r.status_code > 200:
-            # logging.error(
-            #     'error sending splunk event to http collector: {0}'.format(
-            #         r.json()))
-            # attempt to avoid recursion with the logging handler
-            print('error sending splunk event to http collector: {0}'.format(
-                r.text))
+        if r.status_code not in range(200, 300):
+            LOGGER.debug(f'SplunkHandler: error sending splunk event to http collector: {r.text}')
 
     def format_request(self):
         """ Format the request to JSON. """

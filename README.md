@@ -151,7 +151,18 @@ INSTALLED_APPS = (
 )
 ```
 
-In your django settings:
+Add the following environment variables:
+```
+SPLUNK_LOGS=True
+# HTTP Event Collector Token
+SPLUNK_TOKEN=some_token
+# Splunk Server URL
+SPLUNK_URL=http://localhost
+# Event Collector Port (default to 8088)
+# SPLUNK_EVENT_COLLECTOR_PORT=8088
+```
+
+In your django settings (this assumes you use django-environ):
 ```
 ...
 LOGGING = {
@@ -194,21 +205,12 @@ LOGGING = {
     }
 }
 
-##
-# Django-Splunk-Logging
-##
-# Enable or disable Splunk Logs
-SPLUNK_LOGS = True
-# HTTP Event Collector Token
-SPLUNK_TOKEN = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxxx"
-# Splunk Event Collector has enabled HTTPS
-SPLUNK_HTTPS = False
-# Splunk Server Address
-SPLUNK_ADDRESS = "XX.XXX.XX.XXX"
-# Event Collector Port (default: 8088)
-SPLUNK_EVENT_COLLECTOR_PORT = "8088"
-# Enable threading on event sending
-SPLUNK_THREAD_EVENTS = True
+SPLUNK_LOGS = env.bool('SPLUNK_LOGS', default=None)
+
+if SPLUNK_LOGS:
+    SPLUNK_URL = env('SPLUNK_URL')
+    SPLUNK_TOKEN = env('SPLUNK_TOKEN')
+    SPLUNK_EC_PORT = env('SPLUNK_EVENT_COLLECTOR_PORT', default='8088')
 ```
 
 Optionally, you can specify `VERSION` in settings to add to the splunk data
