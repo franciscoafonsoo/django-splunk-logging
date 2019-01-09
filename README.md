@@ -1,6 +1,9 @@
 # Django-Splunk-Logging
 
 ## About
+
+### THIS IS A WORK IN PROGRESS
+
 Django-Splunk-Logging implements a singleton data format and pipes your events into splunk enterprise by utilizing the HTTP Event Collector.
 
 ### SplunkEvent Example
@@ -141,7 +144,15 @@ Will send data to splunk as well:
 ```
 
 ## Installation
-Run `pip install django-splunk-logging`
+This fork is a work in progress, so it's not avaliable in pypi yet.
+
+If you still want to use it:
+- clone the repository: `https://github.com/franciscoafonsoo/django-splunk-logging.git`
+- either:
+    - Creates a tar archive `python setup.py sdist`
+    - Install the tar archive (located in sdist directory): `pip install file.tar`
+- or:
+    - Install from the cloned folder (will let you edit the code): `pip install -e 'cloned-folder'`
 
 Add `splunk` to `INSTALLED_APPS` in your django settings
 ```
